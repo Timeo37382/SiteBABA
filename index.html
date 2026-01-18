@@ -27,7 +27,7 @@
 <body class="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
     <div class="container mx-auto px-4 py-12">
         <div class="max-w-2xl mx-auto">
-            
+
             <!-- Header -->
             <div class="text-center mb-12">
                 <h1 class="text-6xl font-bold text-white mb-4 text-shadow">
@@ -36,7 +36,7 @@
                 <p class="text-blue-200 text-xl mb-8 text-shadow-sm">
                     Tous vos projets Minecraft
                 </p>
-                
+
                 <!-- Bouton CTA -->
                 <button
                     onclick="scrollToForm()"
@@ -57,7 +57,7 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
                     Pourquoi choisir BabaBuild ? 🌟
                 </h2>
-                
+
                 <p class="text-gray-700 text-lg mb-6 leading-relaxed text-center">
                     Chez <span class="font-bold text-purple-600">BabaBuild</span>, nous transformons vos idees en realite ! 
                     Que vous ayez besoin d'une construction exceptionnelle ou de farming de ressources ultra-efficace, 
@@ -130,7 +130,7 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
                     Ou nous trouver ? 📍
                 </h2>
-                
+
                 <div class="bg-gradient-to-br from-orange-50 to-red-100 p-8 rounded-xl border-2 border-orange-300 shadow-lg">
                     <div class="flex flex-col items-center gap-4">
                         <div class="text-6xl">🏢</div>
@@ -159,7 +159,7 @@
                 <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
                     Qui sommes nous ? 👥
                 </h2>
-                
+
                 <p class="text-gray-600 text-center mb-8">
                     Decouvrez l'equipe de BabaBuild
                 </p>
@@ -168,6 +168,8 @@
                     <!-- Babazam -->
                     <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-300 shadow-lg hover:scale-105 transition-transform">
                         <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-purple-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                👑
                             <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-purple-400 shadow-lg">
                                 <img src="babazam.png" alt="Babazam" class="w-full h-full object-cover">
                             </div>
@@ -192,6 +194,8 @@
                     <!-- Fondufrom -->
                     <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-300 shadow-lg hover:scale-105 transition-transform">
                         <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-green-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🌾
                             <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-green-400 shadow-lg">
                                 <img src="fondufrom.png" alt="Fondufrom" class="w-full h-full object-cover">
                             </div>
@@ -207,6 +211,8 @@
                     <!-- the_lumises -->
                     <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border-2 border-yellow-300 shadow-lg hover:scale-105 transition-transform w-full md:w-auto md:min-w-[280px] max-w-sm">
                         <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-yellow-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🌾
                             <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-yellow-400 shadow-lg">
                                 <img src="lumises.png" alt="the_lumises" class="w-full h-full object-cover">
                             </div>
@@ -219,6 +225,8 @@
                     <!-- Tim3738 -->
                     <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border-2 border-indigo-300 shadow-lg hover:scale-105 transition-transform w-full md:w-auto md:min-w-[280px] max-w-sm">
                         <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-indigo-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                ⚡
                             <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-indigo-400 shadow-lg">
                                 <img src="tim.png" alt="Tim3738" class="w-full h-full object-cover">
                             </div>
@@ -357,207 +365,73 @@
                     <li>• Soyez precis dans votre description</li>
                 </ul>
             </div>
-
-            <!-- Section Avis -->
-            <div class="mt-12">
-                <!-- Titre -->
-                <div class="text-center mb-6">
-                    <h2 class="text-4xl font-bold text-white text-shadow">
-                        ⭐ Avis de nos clients
-                    </h2>
-                    <p class="text-blue-200 mt-2 text-shadow-sm">
-                        Partagez votre experience avec BabaBuild
-                    </p>
-                </div>
-
-                <!-- Formulaire d'avis -->
-                <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        📝 Laisser un avis
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <!-- Pseudo -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                🎮 Votre pseudo *
-                            </label>
-                            <input
-                                type="text"
-                                id="avisPseudo"
-                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
-                                placeholder="Ex: Steve123"
-                            />
-                        </div>
-
-                        <!-- Note -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">
-                                ⭐ Votre note *
-                            </label>
-                            <div class="flex gap-2 justify-center" id="ratingStars">
-                                <button type="button" onclick="setRating(1)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(2)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(3)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(4)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(5)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                            </div>
-                        </div>
-
-                        <!-- Commentaire -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                💬 Votre commentaire *
-                            </label>
-                            <textarea
-                                id="avisCommentaire"
-                                rows="4"
-                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 resize-none transition-all"
-                                placeholder="Partagez votre experience..."
-                            ></textarea>
-                        </div>
-
-                        <!-- Status Messages Avis -->
-                        <div id="statusMessageAvis" class="hidden"></div>
-
-                        <!-- Submit Button -->
-                        <button
-                            onclick="submitAvis()"
-                            id="submitAvisBtn"
-                            class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 py-4 px-6 rounded-lg font-bold text-lg hover:from-yellow-500 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Publier mon avis
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Liste des avis -->
-                <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-2 text-center">
-                        💎 Avis de la communaute
-                    </h3>
-                    
-                    <!-- Moyenne des avis -->
-                    <div id="averageRating" class="text-center mb-6 py-4 bg-gradient-to-r from-yellow-50 to-orange-50 rounded-xl border-2 border-yellow-200">
-                        <div class="text-4xl text-yellow-400 mb-2">⭐</div>
-                        <div class="text-3xl font-bold text-gray-800">-</div>
-                        <div class="text-sm text-gray-600 mt-1">Note moyenne</div>
-                    </div>
-                    
-                    <div id="avisList" class="space-y-4">
-                        <!-- Les avis seront chargés ici -->
-                        <div class="text-center text-gray-500 py-8">
-                            <div class="text-4xl mb-2">⏳</div>
-                            <p>Chargement des avis...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
-        // CONFIGURATION
+        // METTEZ VOTRE URL DE WEBHOOK ICI
         const WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1462456499539279877/rcd9BtLQvFN1I6sSKTKuSYCVDCl-I64IY96IGfUr3rgm6G0hpTCPXGGMWXRkcpRaRJec';
-        const ADMIN_PASSWORD = 'BabaBuild2025';
-        const STORAGE_KEY = 'bababuild-avis';
-        
-        let selectedType = '';
-        let selectedRating = 0;
 
-        // Charger les avis au démarrage
-        window.addEventListener('DOMContentLoaded', () => {
-            loadAvis();
-        });
+        let selectedType = '';
 
         // Fonction pour scroller jusqu'au formulaire
         function scrollToForm() {
-            document.getElementById('formulaire').scrollIntoView({ 
-                behavior: 'smooth', 
-                block: 'start' 
-            });
+            const formulaire = document.getElementById('formulaire');
+            formulaire.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
-        // Sélection du type de demande
         function selectType(type) {
             selectedType = type;
-            
-            const btnBuild = document.getElementById('btn-build');
-            const btnFarming = document.getElementById('btn-farming');
-            const checkBuild = document.getElementById('check-build');
-            const checkFarming = document.getElementById('check-farming');
-            
-            // Reset
-            btnBuild.className = 'relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200';
-            btnFarming.className = 'relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-green-300 hover:bg-green-50/50 transition-all duration-200';
-            checkBuild.className = 'hidden absolute top-2 right-2';
-            checkFarming.className = 'hidden absolute top-2 right-2';
-            
-            // Activer le bouton sélectionné
+
+            // Reset tous les boutons
+            document.getElementById('btn-build').className = 'relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200';
+            document.getElementById('btn-farming').className = 'relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-green-300 hover:bg-green-50/50 transition-all duration-200';
+            document.getElementById('check-build').className = 'hidden absolute top-2 right-2';
+            document.getElementById('check-farming').className = 'hidden absolute top-2 right-2';
+
+            // Activer le bouton selectionne
             if (type === 'build') {
-                btnBuild.className = 'relative p-6 rounded-xl border-2 border-blue-500 bg-blue-50 shadow-lg scale-105 transition-all duration-200';
-                checkBuild.className = 'absolute top-2 right-2';
+                document.getElementById('btn-build').className = 'relative p-6 rounded-xl border-2 border-blue-500 bg-blue-50 shadow-lg scale-105 transition-all duration-200';
+                document.getElementById('check-build').className = 'absolute top-2 right-2';
             } else {
-                btnFarming.className = 'relative p-6 rounded-xl border-2 border-green-500 bg-green-50 shadow-lg scale-105 transition-all duration-200';
-                checkFarming.className = 'absolute top-2 right-2';
+                document.getElementById('btn-farming').className = 'relative p-6 rounded-xl border-2 border-green-500 bg-green-50 shadow-lg scale-105 transition-all duration-200';
+                document.getElementById('check-farming').className = 'absolute top-2 right-2';
             }
         }
 
-        // Afficher un statut
         function showStatus(type, message) {
             const statusDiv = document.getElementById('statusMessage');
-            const isSuccess = type === 'success';
-            
             statusDiv.className = `flex items-center gap-2 p-4 rounded-lg ${
-                isSuccess 
+                type === 'success' 
                     ? 'bg-green-50 text-green-800 border-2 border-green-200' 
                     : 'bg-red-50 text-red-800 border-2 border-red-200'
             }`;
-            
-            const icon = isSuccess 
+
+            const icon = type === 'success' 
                 ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
                 : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>';
-            
+
             statusDiv.innerHTML = icon + '<span class="font-medium">' + message + '</span>';
             statusDiv.classList.remove('hidden');
         }
 
-        function showStatusAvis(type, message) {
-            const statusDiv = document.getElementById('statusMessageAvis');
-            const isSuccess = type === 'success';
-            
-            statusDiv.className = `flex items-center gap-2 p-4 rounded-lg ${
-                isSuccess 
-                    ? 'bg-green-50 text-green-800 border-2 border-green-200' 
-                    : 'bg-red-50 text-red-800 border-2 border-red-200'
-            }`;
-            
-            const icon = isSuccess 
-                ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
-                : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>';
-            
-            statusDiv.innerHTML = icon + '<span class="font-medium">' + message + '</span>';
-            statusDiv.classList.remove('hidden');
-        }
-
-        // Soumettre une demande
         async function handleSubmit() {
             const pseudoMinecraft = document.getElementById('pseudoMinecraft').value.trim();
             const discord = document.getElementById('discord').value.trim();
             const description = document.getElementById('description').value.trim();
-            
+
+            // Validation
             if (!pseudoMinecraft || !discord || !description || !selectedType) {
                 showStatus('error', 'Veuillez remplir tous les champs et choisir un type de demande');
                 return;
             }
-            
+
+            // Desactiver le bouton
             const btn = document.getElementById('submitBtn');
             btn.disabled = true;
             btn.innerHTML = '<div class="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div> Envoi en cours...';
-            
+
+            // Message Discord
             const discordMessage = {
                 content: "🔔 **Nouvelle demande reçue !**",
                 embeds: [{
@@ -565,140 +439,58 @@
                     description: `**${pseudoMinecraft}** vient de soumettre une demande`,
                     color: selectedType === 'build' ? 3447003 : 3066993,
                     fields: [
-                        { name: "🎮 Pseudo Minecraft", value: `\`${pseudoMinecraft}\``, inline: true },
-                        { name: "💬 Discord", value: `\`${discord}\``, inline: true },
-                        { name: "📋 Type de demande", value: selectedType === 'build' ? "**Build**" : "**Farming**", inline: true },
-                        { name: "📝 Description de la demande", value: `>>> ${description}`, inline: false }
+                        {
+                            name: "🎮 Pseudo Minecraft",
+                            value: `\`${pseudoMinecraft}\``,
+                            inline: true
+                        },
+                        {
+                            name: "💬 Discord",
+                            value: `\`${discord}\``,
+                            inline: true
+                        },
+                        {
+                            name: "📋 Type de demande",
+                            value: selectedType === 'build' ? "**Build**" : "**Farming**",
+                            inline: true
+                        },
+                        {
+                            name: "📝 Description de la demande",
+                            value: `>>> ${description}`,
+                            inline: false
+                        }
                     ],
                     timestamp: new Date().toISOString(),
-                    footer: { text: "BabaBuild - Formulaire de demande" }
+                    footer: {
+                        text: "BabaBuild - Formulaire de demande"
+                    }
                 }]
             };
-            
+
             try {
                 const response = await fetch(WEBHOOK_URL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
                     body: JSON.stringify(discordMessage)
                 });
-                
+
                 if (response.ok) {
                     showStatus('success', 'Demande envoyee avec succes ! Notre equipe va vous contacter bientot.');
+
+                    // Reset le formulaire
                     document.getElementById('pseudoMinecraft').value = '';
                     document.getElementById('discord').value = '';
                     document.getElementById('description').value = '';
-                    selectedType = '';
                     selectType('');
+                    selectedType = '';
                 } else {
                     throw new Error('Erreur');
                 }
             } catch (error) {
                 showStatus('error', 'Erreur lors de l\'envoi. Veuillez reessayer plus tard.');
             } finally {
+                // Reactiver le bouton
                 btn.disabled = false;
-                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> Envoyer la demande';
-            }
-        }
-
-      <!-- Firebase -->
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-  import { 
-    getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy 
-  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyAU0cPnOoDKALml9vY2YBhI-jZSfapDzoc",
-    authDomain: "database-24f65.firebaseapp.com",
-    projectId: "database-24f65",
-    storageBucket: "database-24f65.firebasestorage.app",
-    messagingSenderId: "226343312230",
-    appId: "1:226343312230:web:724484f11341a5837606a7"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-
-  // ===== CONFIG =====
-  const ADMIN_PASSWORD = "BabaBuild2025";
-  let selectedRating = 0;
-
-  // ===== STARS =====
-  window.setRating = (rating) => {
-    selectedRating = rating;
-    document.querySelectorAll(".star-btn").forEach((star, i) => {
-      star.className = i < rating
-        ? "star-btn text-5xl text-yellow-400"
-        : "star-btn text-5xl text-gray-300 hover:text-yellow-400";
-    });
-  };
-
-  // ===== SUBMIT AVIS =====
-  window.submitAvis = async () => {
-    const pseudo = document.getElementById("avisPseudo").value.trim();
-    const commentaire = document.getElementById("avisCommentaire").value.trim();
-
-    if (!pseudo || !commentaire || selectedRating === 0) {
-      alert("Tous les champs sont obligatoires");
-      return;
-    }
-
-    await addDoc(collection(db, "avis"), {
-      pseudo,
-      commentaire,
-      rating: selectedRating,
-      date: new Date()
-    });
-
-    document.getElementById("avisPseudo").value = "";
-    document.getElementById("avisCommentaire").value = "";
-    setRating(0);
-    loadAvis();
-  };
-
-  // ===== LOAD AVIS =====
-  window.loadAvis = async () => {
-    const avisList = document.getElementById("avisList");
-    const averageRating = document.getElementById("averageRating");
-
-    avisList.innerHTML = "⏳ Chargement...";
-
-    const q = query(collection(db, "avis"), orderBy("date", "desc"));
-    const snapshot = await getDocs(q);
-
-    if (snapshot.empty) {
-      avisList.innerHTML = "<p class='text-center text-gray-500'>Aucun avis</p>";
-      averageRating.innerHTML = "-";
-      return;
-    }
-
-    let avis = [];
-    snapshot.forEach(d => avis.push({ id: d.id, ...d.data() }));
-
-    // Moyenne
-    const avg = (avis.reduce((s, a) => s + a.rating, 0) / avis.length).toFixed(1);
-    averageRating.innerHTML = `<b>${avg} / 5</b> (${avis.length} avis)`;
-
-    avisList.innerHTML = avis.map(a => `
-      <div class="p-4 border rounded-lg">
-        <b>${a.pseudo}</b> ⭐ ${a.rating}/5
-        <p>${a.commentaire}</p>
-        <button onclick="deleteAvis('${a.id}')" class="text-red-500 text-sm">Supprimer</button>
-      </div>
-    `).join("");
-  };
-
-  // ===== DELETE =====
-  window.deleteAvis = async (id) => {
-    const pwd = prompt("Mot de passe admin");
-    if (pwd !== ADMIN_PASSWORD) return alert("Mot de passe incorrect");
-
-    await deleteDoc(doc(db, "avis", id));
-    loadAvis();
-  };
-
-  document.addEventListener("DOMContentLoaded", loadAvis);
-
-    </script>
-</body>
-</html>
+                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg
