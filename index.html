@@ -626,6 +626,11 @@
             btn.innerHTML = '<div class="w-6 h-6 border-3 border-gray-900 border-t-transparent rounded-full animate-spin"></div> Publication...';
 
             try {
+                // Vérifier si window.storage existe
+                if (!window.storage || typeof window.storage.set !== 'function') {
+                    throw new Error('Le système de stockage n\'est pas disponible. Veuillez recharger la page.');
+                }
+
                 let avisList = [];
                 
                 try {
@@ -676,6 +681,13 @@
             const averageRating = document.getElementById('averageRating');
             
             try {
+                // Vérifier si window.storage existe
+                if (!window.storage || typeof window.storage.get !== 'function') {
+                    console.log('Storage non disponible');
+                    displayNoAvis(avisList, averageRating);
+                    return;
+                }
+
                 let data = null;
                 try {
                     data = await window.storage.get(STORAGE_KEY, true);
@@ -783,6 +795,11 @@
             }
 
             try {
+                // Vérifier si window.storage existe
+                if (!window.storage || typeof window.storage.get !== 'function') {
+                    throw new Error('Le système de stockage n\'est pas disponible');
+                }
+
                 const data = await window.storage.get(STORAGE_KEY, true);
                 
                 if (!data || !data.value) {
