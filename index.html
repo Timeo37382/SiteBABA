@@ -626,20 +626,12 @@
             btn.innerHTML = '<div class="w-6 h-6 border-3 border-gray-900 border-t-transparent rounded-full animate-spin"></div> Publication...';
 
             try {
-                // Vérifier si window.storage existe
-                if (!window.storage || typeof window.storage.set !== 'function') {
-                    throw new Error('Le système de stockage n\'est pas disponible. Veuillez recharger la page.');
-                }
-
                 let avisList = [];
                 
-                try {
-                    const data = await window.storage.get(STORAGE_KEY, true);
-                    if (data && data.value) {
-                        avisList = JSON.parse(data.value);
-                    }
-                } catch (e) {
-                    console.log('Première utilisation, liste vide');
+                // Récupérer les avis depuis localStorage
+                const stored = localStorage.getItem(STORAGE_KEY);
+                if (stored) {
+                    avisList = JSON.parse(stored);
                 }
 
                 const newAvis = {
@@ -651,11 +643,8 @@
 
                 avisList.unshift(newAvis);
 
-                const result = await window.storage.set(STORAGE_KEY, JSON.stringify(avisList), true);
-                
-                if (!result) {
-                    throw new Error('Échec de la sauvegarde');
-                }
+                // Sauvegarder dans localStorage
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(avisList));
 
                 showStatusAvis('success', 'Votre avis a ete publie avec succes !');
                 
@@ -664,7 +653,7 @@
                 setRating(0);
                 selectedRating = 0;
 
-                setTimeout(() => loadAvis(), 500);
+                setTimeout(() => loadAvis(), 300);
 
             } catch (error) {
                 console.error('Erreur:', error);
@@ -676,31 +665,19 @@
         }
 
         // Charger les avis
-        async function loadAvis() {
+        function loadAvis() {
             const avisList = document.getElementById('avisList');
             const averageRating = document.getElementById('averageRating');
             
             try {
-                // Vérifier si window.storage existe
-                if (!window.storage || typeof window.storage.get !== 'function') {
-                    console.log('Storage non disponible');
-                    displayNoAvis(avisList, averageRating);
-                    return;
-                }
-
-                let data = null;
-                try {
-                    data = await window.storage.get(STORAGE_KEY, true);
-                } catch (e) {
-                    console.log('Aucune donnée stockée');
-                }
+                const stored = localStorage.getItem(STORAGE_KEY);
                 
-                if (!data || !data.value) {
+                if (!stored) {
                     displayNoAvis(avisList, averageRating);
                     return;
                 }
 
-                const avis = JSON.parse(data.value);
+                const avis = JSON.parse(stored);
                 
                 if (avis.length === 0) {
                     displayNoAvis(avisList, averageRating);
@@ -780,7 +757,7 @@
         }
 
         // Supprimer un avis
-        window.handleDeleteAvis = async function(index) {
+        window.handleDeleteAvis = function(index) {
             const password = prompt('🔒 Mot de passe administrateur :');
             
             if (!password) return;
@@ -795,29 +772,20 @@
             }
 
             try {
-                // Vérifier si window.storage existe
-                if (!window.storage || typeof window.storage.get !== 'function') {
-                    throw new Error('Le système de stockage n\'est pas disponible');
-                }
-
-                const data = await window.storage.get(STORAGE_KEY, true);
+                const stored = localStorage.getItem(STORAGE_KEY);
                 
-                if (!data || !data.value) {
+                if (!stored) {
                     alert('❌ Aucune donnée trouvée');
                     return;
                 }
 
-                let avisList = JSON.parse(data.value);
+                let avisList = JSON.parse(stored);
                 avisList.splice(index, 1);
 
-                const result = await window.storage.set(STORAGE_KEY, JSON.stringify(avisList), true);
-                
-                if (!result) {
-                    throw new Error('Échec de la sauvegarde');
-                }
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(avisList));
 
                 alert('✅ Avis supprimé avec succès !');
-                setTimeout(() => loadAvis(), 500);
+                setTimeout(() => loadAvis(), 300);
 
             } catch (error) {
                 console.error('Erreur suppression:', error);
