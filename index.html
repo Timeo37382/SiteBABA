@@ -600,198 +600,106 @@
             }
         }
 
-        // Système de notation
-        function setRating(rating) {
-            selectedRating = rating;
-            const stars = document.querySelectorAll('.star-btn');
-            stars.forEach((star, index) => {
-                star.className = index < rating 
-                    ? 'star-btn text-5xl text-yellow-400 transition-colors'
-                    : 'star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors';
-            });
-        }
+      <!-- Firebase -->
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+  import { 
+    getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy 
+  } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
-        // Soumettre un avis
-        async function submitAvis() {
-            const pseudo = document.getElementById('avisPseudo').value.trim();
-            const commentaire = document.getElementById('avisCommentaire').value.trim();
-            
-            if (!pseudo || !commentaire || selectedRating === 0) {
-                showStatusAvis('error', 'Veuillez remplir tous les champs et donner une note');
-                return;
-            }
+  const firebaseConfig = {
+    apiKey: "AIzaSyAU0cPnOoDKALml9vY2YBhI-jZSfapDzoc",
+    authDomain: "database-24f65.firebaseapp.com",
+    projectId: "database-24f65",
+    storageBucket: "database-24f65.firebasestorage.app",
+    messagingSenderId: "226343312230",
+    appId: "1:226343312230:web:724484f11341a5837606a7"
+  };
 
-            const btn = document.getElementById('submitAvisBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="w-6 h-6 border-3 border-gray-900 border-t-transparent rounded-full animate-spin"></div> Publication...';
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
 
-            try {
-                let avisList = [];
-                
-                // Récupérer les avis depuis localStorage
-                const stored = localStorage.getItem(STORAGE_KEY);
-                if (stored) {
-                    avisList = JSON.parse(stored);
-                }
+  // ===== CONFIG =====
+  const ADMIN_PASSWORD = "BabaBuild2025";
+  let selectedRating = 0;
 
-                const newAvis = {
-                    pseudo,
-                    rating: selectedRating,
-                    commentaire,
-                    date: new Date().toISOString()
-                };
+  // ===== STARS =====
+  window.setRating = (rating) => {
+    selectedRating = rating;
+    document.querySelectorAll(".star-btn").forEach((star, i) => {
+      star.className = i < rating
+        ? "star-btn text-5xl text-yellow-400"
+        : "star-btn text-5xl text-gray-300 hover:text-yellow-400";
+    });
+  };
 
-                avisList.unshift(newAvis);
+  // ===== SUBMIT AVIS =====
+  window.submitAvis = async () => {
+    const pseudo = document.getElementById("avisPseudo").value.trim();
+    const commentaire = document.getElementById("avisCommentaire").value.trim();
 
-                // Sauvegarder dans localStorage
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(avisList));
+    if (!pseudo || !commentaire || selectedRating === 0) {
+      alert("Tous les champs sont obligatoires");
+      return;
+    }
 
-                showStatusAvis('success', 'Votre avis a ete publie avec succes !');
-                
-                document.getElementById('avisPseudo').value = '';
-                document.getElementById('avisCommentaire').value = '';
-                setRating(0);
-                selectedRating = 0;
+    await addDoc(collection(db, "avis"), {
+      pseudo,
+      commentaire,
+      rating: selectedRating,
+      date: new Date()
+    });
 
-                setTimeout(() => loadAvis(), 300);
+    document.getElementById("avisPseudo").value = "";
+    document.getElementById("avisCommentaire").value = "";
+    setRating(0);
+    loadAvis();
+  };
 
-            } catch (error) {
-                console.error('Erreur:', error);
-                showStatusAvis('error', 'Erreur: ' + error.message);
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Publier mon avis';
-            }
-        }
+  // ===== LOAD AVIS =====
+  window.loadAvis = async () => {
+    const avisList = document.getElementById("avisList");
+    const averageRating = document.getElementById("averageRating");
 
-        // Charger les avis
-        function loadAvis() {
-            const avisList = document.getElementById('avisList');
-            const averageRating = document.getElementById('averageRating');
-            
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                
-                if (!stored) {
-                    displayNoAvis(avisList, averageRating);
-                    return;
-                }
+    avisList.innerHTML = "⏳ Chargement...";
 
-                const avis = JSON.parse(stored);
-                
-                if (avis.length === 0) {
-                    displayNoAvis(avisList, averageRating);
-                    return;
-                }
+    const q = query(collection(db, "avis"), orderBy("date", "desc"));
+    const snapshot = await getDocs(q);
 
-                displayAvisStats(avis, averageRating);
-                displayAvisList(avis, avisList);
+    if (snapshot.empty) {
+      avisList.innerHTML = "<p class='text-center text-gray-500'>Aucun avis</p>";
+      averageRating.innerHTML = "-";
+      return;
+    }
 
-            } catch (error) {
-                console.error('Erreur chargement:', error);
-                displayNoAvis(avisList, averageRating);
-            }
-        }
+    let avis = [];
+    snapshot.forEach(d => avis.push({ id: d.id, ...d.data() }));
 
-        function displayNoAvis(avisList, averageRating) {
-            avisList.innerHTML = `
-                <div class="text-center text-gray-500 py-8">
-                    <div class="text-4xl mb-2">📝</div>
-                    <p>Aucun avis pour le moment. Soyez le premier a en laisser un !</p>
-                </div>
-            `;
-            averageRating.innerHTML = `
-                <div class="text-4xl text-yellow-400 mb-2">⭐</div>
-                <div class="text-3xl font-bold text-gray-800">-</div>
-                <div class="text-sm text-gray-600 mt-1">Aucune note</div>
-            `;
-        }
+    // Moyenne
+    const avg = (avis.reduce((s, a) => s + a.rating, 0) / avis.length).toFixed(1);
+    averageRating.innerHTML = `<b>${avg} / 5</b> (${avis.length} avis)`;
 
-        function displayAvisStats(avis, averageRating) {
-            const totalRating = avis.reduce((sum, a) => sum + a.rating, 0);
-            const average = (totalRating / avis.length).toFixed(1);
-            const fullStars = Math.floor(average);
-            const hasHalfStar = (average % 1) >= 0.5;
-            
-            let starsDisplay = '★'.repeat(fullStars);
-            if (hasHalfStar && fullStars < 5) starsDisplay += '⯨';
-            starsDisplay += '☆'.repeat(5 - fullStars - (hasHalfStar ? 1 : 0));
+    avisList.innerHTML = avis.map(a => `
+      <div class="p-4 border rounded-lg">
+        <b>${a.pseudo}</b> ⭐ ${a.rating}/5
+        <p>${a.commentaire}</p>
+        <button onclick="deleteAvis('${a.id}')" class="text-red-500 text-sm">Supprimer</button>
+      </div>
+    `).join("");
+  };
 
-            averageRating.innerHTML = `
-                <div class="text-4xl text-yellow-400 mb-2">${starsDisplay}</div>
-                <div class="text-3xl font-bold text-gray-800">${average} / 5</div>
-                <div class="text-sm text-gray-600 mt-1">${avis.length} avis</div>
-            `;
-        }
+  // ===== DELETE =====
+  window.deleteAvis = async (id) => {
+    const pwd = prompt("Mot de passe admin");
+    if (pwd !== ADMIN_PASSWORD) return alert("Mot de passe incorrect");
 
-        function displayAvisList(avis, avisList) {
-            avisList.innerHTML = avis.map((a, index) => {
-                const stars = '★'.repeat(a.rating) + '☆'.repeat(5 - a.rating);
-                const date = new Date(a.date).toLocaleDateString('fr-FR');
-                
-                return `
-                    <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-shadow">
-                        <div class="flex justify-between items-start mb-3">
-                            <div>
-                                <h4 class="font-bold text-lg text-gray-800">${a.pseudo}</h4>
-                                <p class="text-xs text-gray-500">${date}</p>
-                            </div>
-                            <div class="flex items-center gap-3">
-                                <div class="text-2xl text-yellow-400">${stars}</div>
-                                <button 
-                                    type="button"
-                                    onclick="handleDeleteAvis(${index})"
-                                    class="text-red-500 hover:text-red-700 hover:bg-red-50 p-2 rounded-lg transition-all"
-                                    title="Supprimer (Admin)"
-                                >
-                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <p class="text-gray-700 leading-relaxed">${a.commentaire}</p>
-                    </div>
-                `;
-            }).join('');
-        }
+    await deleteDoc(doc(db, "avis", id));
+    loadAvis();
+  };
 
-        // Supprimer un avis
-        window.handleDeleteAvis = function(index) {
-            const password = prompt('🔒 Mot de passe administrateur :');
-            
-            if (!password) return;
-            
-            if (password !== ADMIN_PASSWORD) {
-                alert('❌ Mot de passe incorrect !');
-                return;
-            }
+  document.addEventListener("DOMContentLoaded", loadAvis);
+</script>
 
-            if (!confirm('Voulez-vous vraiment supprimer cet avis ?')) {
-                return;
-            }
-
-            try {
-                const stored = localStorage.getItem(STORAGE_KEY);
-                
-                if (!stored) {
-                    alert('❌ Aucune donnée trouvée');
-                    return;
-                }
-
-                let avisList = JSON.parse(stored);
-                avisList.splice(index, 1);
-
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(avisList));
-
-                alert('✅ Avis supprimé avec succès !');
-                setTimeout(() => loadAvis(), 300);
-
-            } catch (error) {
-                console.error('Erreur suppression:', error);
-                alert('❌ Erreur : ' + error.message);
-            }
-        }
     </script>
 </body>
 </html>
