@@ -168,8 +168,8 @@
                     <!-- Babazam -->
                     <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-300 shadow-lg hover:scale-105 transition-transform">
                         <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-purple-400 shadow-lg">
-                                <img src="babazam.png" alt="Babazam" class="w-full h-full object-cover">
+                            <div class="w-24 h-24 bg-purple-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                👑
                             </div>
                             <h3 class="text-xl font-bold text-gray-800 mb-1">Babazam</h3>
                             <p class="text-sm text-purple-600 font-semibold mb-2">PDG</p>
@@ -180,6 +180,8 @@
                     <!-- Kikou -->
                     <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-300 shadow-lg hover:scale-105 transition-transform">
                         <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-blue-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🏗️
                             <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-blue-400 shadow-lg">
                                 <img src="kikou.png" alt="Kikou" class="w-full h-full object-cover">
                             </div>
@@ -192,8 +194,8 @@
                     <!-- Fondufrom -->
                     <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-300 shadow-lg hover:scale-105 transition-transform">
                         <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-green-400 shadow-lg">
-                                <img src="fondufrom.png" alt="Fondufrom" class="w-full h-full object-cover">
+                            <div class="w-24 h-24 bg-green-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🌾
                             </div>
                             <h3 class="text-xl font-bold text-gray-800 mb-1">Fondufrom</h3>
                             <p class="text-sm text-green-600 font-semibold mb-2">Farmer</p>
@@ -207,8 +209,8 @@
                     <!-- the_lumises -->
                     <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border-2 border-yellow-300 shadow-lg hover:scale-105 transition-transform w-full md:w-auto md:min-w-[280px] max-w-sm">
                         <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-yellow-400 shadow-lg">
-                                <img src="lumises.png" alt="the_lumises" class="w-full h-full object-cover">
+                            <div class="w-24 h-24 bg-yellow-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🌾
                             </div>
                             <h3 class="text-xl font-bold text-gray-800 mb-1">the_lumises</h3>
                             <p class="text-sm text-yellow-600 font-semibold mb-2">Farmeur</p>
@@ -219,8 +221,8 @@
                     <!-- Tim3738 -->
                     <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border-2 border-indigo-300 shadow-lg hover:scale-105 transition-transform w-full md:w-auto md:min-w-[280px] max-w-sm">
                         <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-indigo-400 shadow-lg">
-                                <img src="tim.png" alt="Tim3738" class="w-full h-full object-cover">
+                            <div class="w-24 h-24 bg-indigo-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                ⚡
                             </div>
                             <h3 class="text-xl font-bold text-gray-800 mb-1">Tim3738</h3>
                             <p class="text-sm text-indigo-600 font-semibold mb-2">Farmeur + Builder</p>
@@ -357,98 +359,6 @@
                     <li>• Soyez precis dans votre description</li>
                 </ul>
             </div>
-
-            <!-- Section Avis -->
-            <div class="mt-12">
-                <!-- Titre -->
-                <div class="text-center mb-6">
-                    <h2 class="text-4xl font-bold text-white text-shadow">
-                        ⭐ Avis de nos clients
-                    </h2>
-                    <p class="text-blue-200 mt-2 text-shadow-sm">
-                        Partagez votre experience avec BabaBuild
-                    </p>
-                </div>
-
-                <!-- Formulaire d'avis -->
-                <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        📝 Laisser un avis
-                    </h3>
-                    
-                    <div class="space-y-6">
-                        <!-- Pseudo -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                🎮 Votre pseudo *
-                            </label>
-                            <input
-                                type="text"
-                                id="avisPseudo"
-                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 transition-all"
-                                placeholder="Ex: Steve123"
-                            />
-                        </div>
-
-                        <!-- Note -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-3">
-                                ⭐ Votre note *
-                            </label>
-                            <div class="flex gap-2 justify-center" id="ratingStars">
-                                <button type="button" onclick="setRating(1)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(2)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(3)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(4)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                                <button type="button" onclick="setRating(5)" class="star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors">★</button>
-                            </div>
-                        </div>
-
-                        <!-- Commentaire -->
-                        <div>
-                            <label class="block text-sm font-semibold text-gray-700 mb-2">
-                                💬 Votre commentaire *
-                            </label>
-                            <textarea
-                                id="avisCommentaire"
-                                rows="4"
-                                class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 resize-none transition-all"
-                                placeholder="Partagez votre experience..."
-                            ></textarea>
-                        </div>
-
-                        <!-- Status Messages Avis -->
-                        <div id="statusMessageAvis" class="hidden"></div>
-
-                        <!-- Submit Button -->
-                        <button
-                            onclick="submitAvis()"
-                            id="submitAvisBtn"
-                            class="w-full bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 py-4 px-6 rounded-lg font-bold text-lg hover:from-yellow-500 hover:to-orange-600 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg"
-                        >
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                            </svg>
-                            Publier mon avis
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Liste des avis -->
-                <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
-                    <h3 class="text-2xl font-bold text-gray-800 mb-6 text-center">
-                        💎 Avis de la communaute
-                    </h3>
-                    
-                    <div id="avisList" class="space-y-4">
-                        <!-- Les avis seront chargés ici -->
-                        <div class="text-center text-gray-500 py-8">
-                            <div class="text-4xl mb-2">⏳</div>
-                            <p>Chargement des avis...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </div>
 
@@ -457,10 +367,6 @@
         const WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1462456499539279877/rcd9BtLQvFN1I6sSKTKuSYCVDCl-I64IY96IGfUr3rgm6G0hpTCPXGGMWXRkcpRaRJec';
 
         let selectedType = '';
-        let selectedRating = 0;
-
-        // Charger les avis au chargement de la page
-        window.addEventListener('DOMContentLoaded', loadAvis);
 
         // Fonction pour scroller jusqu'au formulaire
         function scrollToForm() {
@@ -499,22 +405,6 @@
                 ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
                 : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>';
 
-            statusDiv.innerHTML = icon + '<span class="font-medium">' + message + '</span>';
-            statusDiv.classList.remove('hidden');
-        }
-
-        function showStatusAvis(type, message) {
-            const statusDiv = document.getElementById('statusMessageAvis');
-            statusDiv.className = `flex items-center gap-2 p-4 rounded-lg ${
-                type === 'success' 
-                    ? 'bg-green-50 text-green-800 border-2 border-green-200' 
-                    : 'bg-red-50 text-red-800 border-2 border-red-200'
-            }`;
-            
-            const icon = type === 'success' 
-                ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
-                : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>';
-            
             statusDiv.innerHTML = icon + '<span class="font-medium">' + message + '</span>';
             statusDiv.classList.remove('hidden');
         }
@@ -597,132 +487,9 @@
             } finally {
                 // Reactiver le bouton
                 btn.disabled = false;
-                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg
                 btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> Envoyer la demande';
             }
         }
-
-        // Système de notation par étoiles
-        function setRating(rating) {
-            selectedRating = rating;
-            const stars = document.querySelectorAll('.star-btn');
-            stars.forEach((star, index) => {
-                if (index < rating) {
-                    star.className = 'star-btn text-5xl text-yellow-400 transition-colors';
-                } else {
-                    star.className = 'star-btn text-5xl text-gray-300 hover:text-yellow-400 transition-colors';
-                }
-            });
-        }
-
-        // Soumettre un avis
-        async function submitAvis() {
-            const pseudo = document.getElementById('avisPseudo').value.trim();
-            const commentaire = document.getElementById('avisCommentaire').value.trim();
-            
-            if (!pseudo || !commentaire || selectedRating === 0) {
-                showStatusAvis('error', 'Veuillez remplir tous les champs et donner une note');
-                return;
-            }
-
-            const btn = document.getElementById('submitAvisBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="w-6 h-6 border-3 border-gray-900 border-t-transparent rounded-full animate-spin"></div> Publication...';
-
-            const avis = {
-                pseudo: pseudo,
-                rating: selectedRating,
-                commentaire: commentaire,
-                date: new Date().toISOString()
-            };
-
-            try {
-                // Récupérer les avis existants
-                const existingAvis = await window.storage.get('bababuild-avis', true);
-                let avisList = [];
-                
-                if (existingAvis && existingAvis.value) {
-                    avisList = JSON.parse(existingAvis.value);
-                }
-
-                // Ajouter le nouvel avis
-                avisList.unshift(avis);
-
-                // Sauvegarder
-                await window.storage.set('bababuild-avis', JSON.stringify(avisList), true);
-
-                showStatusAvis('success', 'Votre avis a ete publie avec succes !');
-                
-                // Reset le formulaire
-                document.getElementById('avisPseudo').value = '';
-                document.getElementById('avisCommentaire').value = '';
-                setRating(0);
-                selectedRating = 0;
-
-                // Recharger les avis
-                loadAvis();
-
-            } catch (error) {
-                showStatusAvis('error', 'Erreur lors de la publication. Veuillez reessayer.');
-            } finally {
-                btn.disabled = false;
-                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg> Publier mon avis';
-            }
-        }
-
-        // Charger les avis
-        async function loadAvis() {
-            const avisList = document.getElementById('avisList');
-            
-            try {
-                const data = await window.storage.get('bababuild-avis', true);
-                
-                if (!data || !data.value) {
-                    avisList.innerHTML = `
-                        <div class="text-center text-gray-500 py-8">
-                            <div class="text-4xl mb-2">📝</div>
-                            <p>Aucun avis pour le moment. Soyez le premier a en laisser un !</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const avis = JSON.parse(data.value);
-                
-                if (avis.length === 0) {
-                    avisList.innerHTML = `
-                        <div class="text-center text-gray-500 py-8">
-                            <div class="text-4xl mb-2">📝</div>
-                            <p>Aucun avis pour le moment. Soyez le premier a en laisser un !</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                avisList.innerHTML = avis.map(a => {
-                    const stars = '★'.repeat(a.rating) + '☆'.repeat(5 - a.rating);
-                    const date = new Date(a.date).toLocaleDateString('fr-FR');
-                    
-                    return `
-                        <div class="bg-gradient-to-br from-gray-50 to-gray-100 p-6 rounded-xl border-2 border-gray-200 shadow-md hover:shadow-lg transition-shadow">
-                            <div class="flex justify-between items-start mb-3">
-                                <div>
-                                    <h4 class="font-bold text-lg text-gray-800">${a.pseudo}</h4>
-                                    <p class="text-xs text-gray-500">${date}</p>
-                                </div>
-                                <div class="text-2xl text-yellow-400">${stars}</div>
-                            </div>
-                            <p class="text-gray-700 leading-relaxed">${a.commentaire}</p>
-                        </div>
-                    `;
-                }).join('');
-
-            } catch (error) {
-                avisList.innerHTML = `
-                    <div class="text-center text-gray-500 py-8">
-                        <div class="text-4xl mb-2">📝</div>
-                        <p>Aucun avis pour le moment. Soyez le premier a en laisser un !</p>
-                    </div>
-                `;
-            }
-        }
+    </script>
+</body>
+</html>
