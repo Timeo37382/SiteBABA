@@ -161,7 +161,7 @@
                 </h2>
                 
                 <p class="text-gray-600 text-center mb-8">
-                    Decouvrez l'equipe passionnee derriere BabaBuild
+                    Decouvrez l'equipe de BabaBuild
                 </p>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
@@ -265,7 +265,7 @@
                             type="text"
                             id="discord"
                             class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
-                            placeholder="Ex: Username#1234 ou @username"
+                            placeholder="Ex: @username"
                         />
                     </div>
 
@@ -415,11 +415,6 @@
             // Validation
             if (!pseudoMinecraft || !discord || !description || !selectedType) {
                 showStatus('error', 'Veuillez remplir tous les champs et choisir un type de demande');
-                return;
-            }
-            
-            if (!discord.includes('#') && !discord.includes('@')) {
-                showStatus('error', 'Format Discord invalide (ex: Username#1234 ou @username)');
                 return;
             }
             
