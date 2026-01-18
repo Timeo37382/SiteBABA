@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BabaBuild - On s'occupe de tous vos projets sur Luminis</title>
+    <title>BabaBuild - On s'occupe de tous vos projets</title>
     <link href="https://fonts.cdnfonts.com/css/minecraft-4" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -19,6 +19,9 @@
         .text-shadow-light {
             text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
         }
+        html {
+            scroll-behavior: smooth;
+        }
     </style>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
@@ -31,8 +34,22 @@
                     BabaBuild
                 </h1>
                 <p class="text-blue-200 text-xl mb-8 text-shadow-sm">
-                    Tous vos projets sur Luminis
+                    Tous vos projets Minecraft
                 </p>
+                
+                <!-- Bouton CTA -->
+                <button
+                    onclick="scrollToForm()"
+                    class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 font-bold py-4 px-8 rounded-xl text-xl hover:from-yellow-500 hover:to-orange-600 transition-all transform hover:scale-105 shadow-2xl animate-pulse hover:animate-none inline-flex items-center gap-3"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                    </svg>
+                    Demandez un devis !
+                    <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
+                    </svg>
+                </button>
             </div>
 
             <!-- Presentation -->
@@ -93,10 +110,127 @@
                         </p>
                     </div>
                 </div>
+
+                <!-- Bouton CTA au milieu -->
+                <div class="text-center mt-8">
+                    <button
+                        onclick="scrollToForm()"
+                        class="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg inline-flex items-center gap-2"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"/>
+                        </svg>
+                        Faire une demande maintenant
+                    </button>
+                </div>
+            </div>
+
+            <!-- Ou nous trouver -->
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
+                    Ou nous trouver ? 📍
+                </h2>
+                
+                <div class="bg-gradient-to-br from-orange-50 to-red-100 p-8 rounded-xl border-2 border-orange-300 shadow-lg">
+                    <div class="flex flex-col items-center gap-4">
+                        <div class="text-6xl">🏢</div>
+                        <h3 class="text-2xl font-bold text-gray-800 text-center">Notre Bureau</h3>
+                        <div class="bg-white/80 px-6 py-4 rounded-lg border-2 border-orange-400 shadow-md">
+                            <p class="text-gray-700 text-lg font-semibold text-center">
+                                📌 Coordonnees : <span class="text-orange-600 font-bold">1500 / 600</span>
+                            </p>
+                        </div>
+                        <p class="text-gray-600 text-center max-w-md mt-2">
+                            Venez nous rendre visite sur le serveur ! 
+                            Notre equipe vous accueille a notre bureau pour discuter de vos projets.
+                        </p>
+                        <div class="flex items-center gap-2 mt-4 bg-blue-50 px-4 py-2 rounded-lg border border-blue-300">
+                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span class="text-blue-700 text-sm font-medium">N'hesitez pas a passer nous voir !</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Qui sommes nous -->
+            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8">
+                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
+                    Qui sommes nous ? 👥
+                </h2>
+                
+                <p class="text-gray-600 text-center mb-8">
+                    Decouvrez l'equipe passionnee derriere BabaBuild
+                </p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Babazam -->
+                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-300 shadow-lg hover:scale-105 transition-transform">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-purple-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                👑
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-1">Babazam</h3>
+                            <p class="text-sm text-purple-600 font-semibold mb-2">PDG</p>
+                            <p class="text-xs text-gray-500">@babamaz.</p>
+                        </div>
+                    </div>
+
+                    <!-- Kikou -->
+                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-300 shadow-lg hover:scale-105 transition-transform">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-blue-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🏗️
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-1">Kikou</h3>
+                            <p class="text-sm text-blue-600 font-semibold mb-2">Builder</p>
+                            <p class="text-xs text-gray-500">@kikou138</p>
+                        </div>
+                    </div>
+
+                    <!-- Fondufrom -->
+                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-300 shadow-lg hover:scale-105 transition-transform">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-green-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🌾
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-1">Fondufrom</h3>
+                            <p class="text-sm text-green-600 font-semibold mb-2">Farmer</p>
+                            <p class="text-xs text-gray-500">@fonduefromage</p>
+                        </div>
+                    </div>
+
+                    <!-- the_lumises -->
+                    <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border-2 border-yellow-300 shadow-lg hover:scale-105 transition-transform">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-yellow-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                🌾
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-1">the_lumises</h3>
+                            <p class="text-sm text-yellow-600 font-semibold mb-2">Farmeur</p>
+                            <p class="text-xs text-gray-500">@the_lumises</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tim3738 centre -->
+                <div class="flex justify-center mt-6">
+                    <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border-2 border-indigo-300 shadow-lg hover:scale-105 transition-transform w-full md:w-auto md:min-w-[280px]">
+                        <div class="flex flex-col items-center">
+                            <div class="w-24 h-24 bg-indigo-400 rounded-full mb-4 flex items-center justify-center text-4xl">
+                                ⚡
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-1">Tim3738</h3>
+                            <p class="text-sm text-indigo-600 font-semibold mb-2">Farmeur + Builder</p>
+                            <p class="text-xs text-gray-500">@timeo3738</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <!-- Titre formulaire -->
-            <div class="text-center mb-6">
+            <div id="formulaire" class="text-center mb-6 scroll-mt-8">
                 <h2 class="text-4xl font-bold text-white text-shadow">
                     📋 Faites votre demande
                 </h2>
@@ -231,6 +365,12 @@
         
         let selectedType = '';
 
+        // Fonction pour scroller jusqu'au formulaire
+        function scrollToForm() {
+            const formulaire = document.getElementById('formulaire');
+            formulaire.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         function selectType(type) {
             selectedType = type;
             
@@ -320,26 +460,7 @@
                     footer: {
                         text: "BabaBuild - Formulaire de demande"
                     }
-                }],
-                components: [
-                    {
-                        type: 1,
-                        components: [
-                            {
-                                type: 2,
-                                style: 3,
-                                label: "✅ Accepter",
-                                custom_id: "accept_request"
-                            },
-                            {
-                                type: 2,
-                                style: 4,
-                                label: "❌ Refuser",
-                                custom_id: "decline_request"
-                            }
-                        ]
-                    }
-                ]
+                }]
             };
             
             try {
