@@ -4,20 +4,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BabaBuild - On s'occupe de tous vos projets</title>
-      @font-face {
+    <script src="https://cdn.tailwindcss.com"></script>
+<style>
+    @font-face {
         font-family: 'Minecraft';
-        src: url('https://fonts.cdnfonts.com/s/44/Minecraft.woff') format('woff');
+        src: url('minecraft.woff2') format('woff2'),
+             url('minecraft.woff') format('woff'),
+             url('minecraft.ttf') format('truetype');
         font-weight: normal;
         font-style: normal;
         font-display: swap;
     }
     
     * {
-        font-family: 'Minecraft', 'Press Start 2P', 'Courier New', monospace !important;
-    }
-    
-    body, h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label {
-        font-family: 'Minecraft', 'Press Start 2P', 'Courier New', monospace !important;
+        font-family: 'Minecraft', 'Courier New', monospace;
     }
     
     /* Ajustements pour mobile */
