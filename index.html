@@ -1,710 +1,182 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BabaBuild - On s'occupe de tous vos projets</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-<style>
-    @font-face {
-        font-family: 'Minecraft';
-        src: url('./Minecraft.woff2') format('woff2'),
-             url('./Minecraft.woff') format('woff'),
-             url('./Minecraft.ttf') format('truetype');
-        font-weight: normal;
-        font-style: normal;
-        font-display: swap;
-        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-    }
+import discord
+from discord.ext import commands
+from discord.ui import Button, View
+from flask import Flask
+import threading
+import os
+from datetime import datetime
+
+# ==============================
+# Configuration bot
+# ==============================
+intents = discord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix='!', intents=intents)
+
+# IDs des salons (à remplacer par tes vrais IDs)
+SALON_DEMANDES = 1234567890  # salon des nouvelles demandes
+SALON_EN_COURS = 1234567891  # salon des demandes acceptées
+SALON_TERMINEES = 1234567892 # salon des demandes terminées
+
+# ==============================
+# Serveur Flask pour UptimeRobot
+# ==============================
+app = Flask("")
+
+@app.route("/")
+def home():
+    return "Bot BABAbot actif !"
+
+def run_flask():
+    app.run(host="0.0.0.0", port=8080)
+
+# ==============================
+# Classes Boutons
+# ==============================
+class BoutonAccepterRefuser(View):
+    def __init__(self, embed_data):
+        super().__init__(timeout=None)
+        self.embed_data = embed_data
+
+    @discord.ui.button(label="✅ Accepter", style=discord.ButtonStyle.success, custom_id="accepter")
+    async def accepter(self, interaction: discord.Interaction, button: Button):
+        embed = discord.Embed(
+            title=self.embed_data['title'],
+            description=self.embed_data['description'],
+            color=self.embed_data['color'],
+            timestamp=datetime.now()
+        )
+        for field in self.embed_data['fields']:
+            embed.add_field(name=field['name'], value=field['value'], inline=field['inline'])
+        embed.set_footer(text=f"Accepté par {interaction.user.name}")
+
+        salon_en_cours = bot.get_channel(SALON_EN_COURS)
+        view_terminer = BoutonTerminer(self.embed_data)
+        await salon_en_cours.send(embed=embed, view=view_terminer)
+
+        await interaction.response.edit_message(
+            content="✅ **Demande acceptée et transférée !**",
+            embed=None,
+            view=None
+        )
+
+    @discord.ui.button(label="❌ Refuser", style=discord.ButtonStyle.danger, custom_id="refuser")
+    async def refuser(self, interaction: discord.Interaction, button: Button):
+        await interaction.response.edit_message(
+            content=f"❌ **Demande refusée par {interaction.user.name}**",
+            embed=None,
+            view=None
+        )
+
+class BoutonTerminer(View):
+    def __init__(self, embed_data):
+        super().__init__(timeout=None)
+        self.embed_data = embed_data
+
+    @discord.ui.button(label="🏁 Terminer", style=discord.ButtonStyle.primary, custom_id="terminer")
+    async def terminer(self, interaction: discord.Interaction, button: Button):
+        embed = discord.Embed(
+            title=self.embed_data['title'],
+            description=self.embed_data['description'],
+            color=0x00ff00,
+            timestamp=datetime.now()
+        )
+        for field in self.embed_data['fields']:
+            embed.add_field(name=field['name'], value=field['value'], inline=field['inline'])
+        embed.set_footer(text=f"Terminé par {interaction.user.name}")
+
+        salon_terminees = bot.get_channel(SALON_TERMINEES)
+        await salon_terminees.send(embed=embed)
+
+        await interaction.response.edit_message(
+            content="🏁 **Projet terminé et archivé !**",
+            embed=None,
+            view=None
+        )
+
+# ==============================
+# Événements bot
+# ==============================
+@bot.event
+async def on_ready():
+    print(f'✅ Bot connecté en tant que {bot.user}')
+    print(f'🔗 Connecté à {len(bot.guilds)} serveur(s)')
     
-    * {
-        font-family: 'Minecraft', 'Courier New', monospace !important;
-        -webkit-font-smoothing: antialiased;
-        -moz-osx-font-smoothing: grayscale;
-    }
-    
-    body, h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label {
-        font-family: 'Minecraft', 'Courier New', monospace !important;
-    }
-    
-    /* Ajustements pour mobile */
-    @media (max-width: 768px) {
-        * {
-            font-size: 0.9em;
-            line-height: 1.6;
+    # Message de confirmation dans le salon des nouvelles demandes
+    salon_demandes = bot.get_channel(SALON_DEMANDES)
+    if salon_demandes:
+        await salon_demandes.send("✅ **BABAbot est connecté et prêt !**")
+
+    try:
+        synced = await bot.tree.sync()
+        print(f'✅ {len(synced)} commande(s) synchronisée(s)')
+    except Exception as e:
+        print(f'❌ Erreur de synchronisation: {e}')
+
+@bot.event
+async def on_message(message):
+    if message.author == bot.user:
+        return
+
+    if message.channel.id == SALON_DEMANDES and message.embeds:
+        embed = message.embeds[0]
+        embed_data = {
+            'title': embed.title or "Nouvelle demande",
+            'description': embed.description or "",
+            'color': embed.color.value if embed.color else 0x3447003,
+            'fields': []
         }
-    }
-        .text-shadow {
-            text-shadow: 4px 4px 0px rgba(0,0,0,0.5);
-        }
-        .text-shadow-sm {
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.5);
-        }
-        .text-shadow-light {
-            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
-        }
-        html {
-            scroll-behavior: smooth;
-        }
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        @keyframes slideInRight {
-            from {
-                opacity: 0;
-                transform: translateX(50px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-        @keyframes scaleIn {
-            from {
-                opacity: 0;
-                transform: scale(0.8);
-            }
-            to {
-                opacity: 1;
-                transform: scale(1);
-            }
-        }
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-10px);
-            }
-        }
-        .animate-fadeIn {
-            animation: fadeIn 0.6s ease-out forwards;
-            opacity: 0;
-        }
-        .animate-slideInLeft {
-            animation: slideInLeft 0.8s ease-out forwards;
-            opacity: 0;
-        }
-        .animate-slideInRight {
-            animation: slideInRight 0.8s ease-out forwards;
-            opacity: 0;
-        }
-        .animate-scaleIn {
-            animation: scaleIn 0.6s ease-out forwards;
-            opacity: 0;
-        }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
-        }
-    </style>
-</head>
-<body class="min-h-screen bg-gradient-to-br from-purple-900 via-indigo-900 to-blue-900">
-    <div class="container mx-auto px-4 py-12">
-        <div class="max-w-2xl mx-auto">
+        for field in embed.fields:
+            embed_data['fields'].append({
+                'name': field.name,
+                'value': field.value,
+                'inline': field.inline
+            })
+        view = BoutonAccepterRefuser(embed_data)
+        await message.reply("**🔔 Nouvelle demande détectée !**\nQue voulez-vous faire ?", view=view)
 
-            <!-- Header -->
-            <div class="text-center mb-12">
-                <h1 class="text-6xl font-bold text-white mb-4 text-shadow">
-                    BabaBuild
-                </h1>
-                <p class="text-blue-200 text-xl mb-8 text-shadow-sm">
-                    Tous vos projets Minecraft
-                </p>
+    # Traitement des commandes
+    await bot.process_commands(message)
 
-                <!-- Bouton CTA -->
-                <button
-                    onclick="scrollToForm()"
-                    class="bg-gradient-to-r from-yellow-400 to-orange-500 text-gray-900 font-bold py-4 px-8 rounded-xl text-xl hover:from-yellow-500 hover:to-orange-600 transition-all transform hover:scale-105 shadow-2xl animate-pulse hover:animate-none inline-flex items-center gap-3"
-                >
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Demandez un devis !
-                    <svg class="w-5 h-5 animate-bounce" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 14l-7 7m0 0l-7-7m7 7V3"/>
-                    </svg>
-                </button>
-            </div>
+# ==============================
+# Commandes slash
+# ==============================
+@bot.tree.command(name="test_demande", description="Créer une demande de test")
+async def test_demande(interaction: discord.Interaction):
+    embed = discord.Embed(
+        title="🏗️ Nouvelle demande - BUILD",
+        description="**TestUser** vient de soumettre une demande",
+        color=0x3447003,
+        timestamp=datetime.now()
+    )
+    embed.add_field(name="🎮 Pseudo Minecraft", value="`TestPlayer`", inline=True)
+    embed.add_field(name="💬 Discord", value="`@testuser`", inline=True)
+    embed.add_field(name="📋 Type de demande", value="**Build**", inline=True)
+    embed.add_field(name="📝 Description de la demande", value=">>> Ceci est une demande de test", inline=False)
+    embed.set_footer(text="BabaBuild - Formulaire de demande")
+    await interaction.response.send_message(embed=embed)
 
-            <!-- Presentation -->
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
-                    Pourquoi choisir BabaBuild ? 🌟
-                </h2>
+@bot.tree.command(name="config", description="Afficher les IDs des salons configurés")
+@commands.has_permissions(administrator=True)
+async def config(interaction: discord.Interaction):
+    await interaction.response.send_message(
+        f"**Configuration actuelle :**\n"
+        f"📥 Salon demandes: `{SALON_DEMANDES}`\n"
+        f"⏳ Salon en cours: `{SALON_EN_COURS}`\n"
+        f"✅ Salon terminées: `{SALON_TERMINEES}`\n\n"
+        f"Pour modifier, éditez les variables dans le code.",
+        ephemeral=True
+    )
 
-                <p class="text-gray-700 text-lg mb-6 leading-relaxed text-center">
-                    Chez <span class="font-bold text-purple-600">BabaBuild</span>, nous transformons vos idees en realite ! 
-                    Que vous ayez besoin d'une construction exceptionnelle ou de farming de ressources ultra-efficace, 
-                    notre equipe d'experts est la pour vous accompagner.
-                </p>
+# ==============================
+# Lancer le bot + Flask
+# ==============================
+if __name__ == "__main__":
+    # Lancer Flask dans un thread pour UptimeRobot
+    threading.Thread(target=run_flask).start()
 
-                <!-- Atouts -->
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
-                    <!-- Atout 1 -->
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-300 shadow-lg">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="text-4xl">⚡</div>
-                            <h3 class="text-xl font-bold text-gray-800">Rapidite d'execution</h3>
-                        </div>
-                        <p class="text-gray-700">
-                            Delais respectes et service express disponible. Votre projet est notre priorite !
-                        </p>
-                    </div>
-
-                    <!-- Atout 2 -->
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-300 shadow-lg">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="text-4xl">🎨</div>
-                            <h3 class="text-xl font-bold text-gray-800">Qualite Premium</h3>
-                        </div>
-                        <p class="text-gray-700">
-                            Des builds detailles et farming de ressources optimise pour une efficacite maximale.
-                        </p>
-                    </div>
-
-                    <!-- Atout 3 -->
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-300 shadow-lg">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="text-4xl">👥</div>
-                            <h3 class="text-xl font-bold text-gray-800">Equipe experimentee</h3>
-                        </div>
-                        <p class="text-gray-700">
-                            Des builders et redstoners professionnels avec des annees d'experience.
-                        </p>
-                    </div>
-
-                    <!-- Atout 4 -->
-                    <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border-2 border-yellow-300 shadow-lg">
-                        <div class="flex items-center gap-3 mb-3">
-                            <div class="text-4xl">💎</div>
-                            <h3 class="text-xl font-bold text-gray-800">Prix competitifs</h3>
-                        </div>
-                        <p class="text-gray-700">
-                            Des tarifs adaptes a tous les budgets sans compromis sur la qualite.
-                        </p>
-                    </div>
-                </div>
-
-                <!-- Bouton CTA au milieu -->
-                <div class="text-center mt-8">
-                    <button
-                        onclick="scrollToForm()"
-                        class="bg-gradient-to-r from-purple-600 to-blue-600 text-white font-bold py-3 px-6 rounded-lg hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 shadow-lg inline-flex items-center gap-2"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13l-3 3m0 0l-3-3m3 3V8m0 13a9 9 0 110-18 9 9 0 010 18z"/>
-                        </svg>
-                        Faire une demande maintenant
-                    </button>
-                </div>
-            </div>
-
-            <!-- Ou nous trouver -->
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
-                    Ou nous trouver ? 📍
-                </h2>
-
-                <div class="bg-gradient-to-br from-orange-50 to-red-100 p-8 rounded-xl border-2 border-orange-300 shadow-lg">
-                    <div class="flex flex-col items-center gap-4">
-                        <div class="text-6xl">🏢</div>
-                        <h3 class="text-2xl font-bold text-gray-800 text-center">Notre Bureau</h3>
-                        <div class="bg-white/80 px-6 py-4 rounded-lg border-2 border-orange-400 shadow-md">
-                            <p class="text-gray-700 text-lg font-semibold text-center">
-                                📌 Coordonnees : <span class="text-orange-600 font-bold">1500 / 600</span>
-                            </p>
-                        </div>
-                        <p class="text-gray-600 text-center max-w-md mt-2">
-                            Venez nous rendre visite sur le serveur ! 
-                            Notre equipe vous accueille a notre bureau pour discuter de vos projets.
-                        </p>
-                        <div class="flex items-center gap-2 mt-4 bg-blue-50 px-4 py-2 rounded-lg border border-blue-300">
-                            <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                            </svg>
-                            <span class="text-blue-700 text-sm font-medium">N'hesitez pas a passer nous voir !</span>
-                        </div>
-                        
-                        <!-- Bouton Nos Builds centré -->
-                        <div class="flex justify-center">
-                            <button
-                                onclick="openBuildsGallery()"
-                                class="mt-6 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold py-3 px-8 rounded-lg hover:from-orange-600 hover:to-red-600 transition-all transform hover:scale-110 hover:shadow-2xl shadow-lg inline-flex items-center gap-2 animate-pulse hover:animate-none"
-                            >
-                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                </svg>
-                                Nos builds
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Modal Gallery avec animations -->
-            <div id="buildsModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm z-50 overflow-y-auto">
-                <div class="min-h-screen px-4 py-8">
-                    <div class="max-w-6xl mx-auto" id="modalContent">
-                        <!-- Header Modal -->
-                        <div class="bg-white/95 backdrop-blur-sm rounded-t-2xl p-6 flex justify-between items-center shadow-2xl">
-                            <h2 class="text-3xl font-bold text-gray-800 text-shadow-light">
-                                Aucun build pour le moment :( , soyez le premier !
-                            </h2>
-                            <button
-                                onclick="closeBuildsGallery()"
-                                class="text-gray-600 hover:text-red-600 transition-all transform hover:scale-110 hover:rotate-90 duration-300"
-                            >
-                                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                                </svg>
-                            </button>
-                        </div>
-                        
-                        <!-- Gallery Grid -->
-                        <div class="bg-white/95 backdrop-blur-sm rounded-b-2xl p-6 shadow-2xl">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                <!-- Build 1 -->
-                                <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 duration-300">
-                                    <img src="build.jpg" alt="Build 1" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="absolute bottom-4 left-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <p class="font-bold text-lg">Build 1</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Build 2 -->
-                                <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 duration-300">
-                                    <img src="build.jpg" alt="Build 2" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="absolute bottom-4 left-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <p class="font-bold text-lg">Build 2</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Build 3 -->
-                                <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 duration-300">
-                                    <img src="build.jpg" alt="Build 3" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="absolute bottom-4 left-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <p class="font-bold text-lg">Build 3</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Build 4 -->
-                                <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 duration-300">
-                                    <img src="build.jpg" alt="Build 4" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="absolute bottom-4 left-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <p class="font-bold text-lg">Build 4</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Build 5 -->
-                                <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 duration-300">
-                                    <img src="build.jpg" alt="Build 5" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="absolute bottom-4 left-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <p class="font-bold text-lg">Build 5</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                <!-- Build 6 -->
-                                <div class="group relative overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all transform hover:scale-105 duration-300">
-                                    <img src="build.jpg" alt="Build 6" class="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500">
-                                    <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                                        <div class="absolute bottom-4 left-4 text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                                            <p class="font-bold text-lg">Build 6</p>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Qui sommes nous -->
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8 mb-8">
-                <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center text-shadow-light">
-                    Qui sommes nous ? 👥
-                </h2>
-
-                <p class="text-gray-600 text-center mb-8">
-                    Decouvrez l'equipe de BabaBuild
-                </p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
-                    <!-- Babazam -->
-                    <div class="bg-gradient-to-br from-purple-50 to-purple-100 p-6 rounded-xl border-2 border-purple-300 shadow-lg hover:scale-105 transition-transform">
-                        <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-purple-400 shadow-lg">
-                                <img src="babazam.png" alt="Babazam" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-1">Babamaz</h3>
-                            <p class="text-sm text-purple-600 font-semibold mb-2">PDG</p>
-                            <p class="text-xs text-gray-500">@babamaz.</p>
-                        </div>
-                    </div>
-
-                    <!-- Kikou -->
-                    <div class="bg-gradient-to-br from-blue-50 to-blue-100 p-6 rounded-xl border-2 border-blue-300 shadow-lg hover:scale-105 transition-transform">
-                        <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-blue-400 shadow-lg">
-                                <img src="kikou.png" alt="Kikou" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-1">Kikou</h3>
-                            <p class="text-sm text-blue-600 font-semibold mb-2">Builder</p>
-                            <p class="text-xs text-gray-500">@kikou138</p>
-                        </div>
-                    </div>
-
-                    <!-- Fondufrom -->
-                    <div class="bg-gradient-to-br from-green-50 to-green-100 p-6 rounded-xl border-2 border-green-300 shadow-lg hover:scale-105 transition-transform">
-                        <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-green-400 shadow-lg">
-                                <img src="fondufrom.png" alt="Fondufrom" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-1">Fondufrom</h3>
-                            <p class="text-sm text-green-600 font-semibold mb-2">Farmer</p>
-                            <p class="text-xs text-gray-500">@fonduefromage</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Deuxieme ligne centree -->
-                <div class="flex flex-wrap justify-center gap-6">
-                    <!-- the_lumises -->
-                    <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 p-6 rounded-xl border-2 border-yellow-300 shadow-lg hover:scale-105 transition-transform w-full md:w-auto md:min-w-[280px] max-w-sm">
-                        <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-yellow-400 shadow-lg">
-                                <img src="lumises.png" alt="the_lumises" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-1">the_lumises</h3>
-                            <p class="text-sm text-yellow-600 font-semibold mb-2">Farmeur</p>
-                            <p class="text-xs text-gray-500">@the_lumises</p>
-                        </div>
-                    </div>
-
-                    <!-- Tim3738 -->
-                    <div class="bg-gradient-to-br from-indigo-50 to-indigo-100 p-6 rounded-xl border-2 border-indigo-300 shadow-lg hover:scale-105 transition-transform w-full md:w-auto md:min-w-[280px] max-w-sm">
-                        <div class="flex flex-col items-center">
-                            <div class="w-24 h-24 rounded-full mb-4 overflow-hidden border-4 border-indigo-400 shadow-lg">
-                                <img src="tim.png" alt="Tim3738" class="w-full h-full object-cover">
-                            </div>
-                            <h3 class="text-xl font-bold text-gray-800 mb-1">Tim3738</h3>
-                            <p class="text-sm text-indigo-600 font-semibold mb-2">Farmeur + Builder</p>
-                            <p class="text-xs text-gray-500">@timeo3738</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Titre formulaire -->
-            <div id="formulaire" class="text-center mb-6 scroll-mt-8">
-                <h2 class="text-4xl font-bold text-white text-shadow">
-                    📋 Faites votre demande
-                </h2>
-                <p class="text-blue-200 mt-2 text-shadow-sm">
-                    Remplissez le formulaire ci-dessous et nous vous contacterons rapidement
-                </p>
-            </div>
-
-            <!-- Formulaire -->
-            <div class="bg-white/95 backdrop-blur-sm rounded-2xl shadow-2xl p-8">
-                <div class="space-y-6">
-                    <!-- Pseudo Minecraft -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            🎮 Pseudo Minecraft *
-                        </label>
-                        <input
-                            type="text"
-                            id="pseudoMinecraft"
-                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
-                            placeholder="Ex: Steve123"
-                        />
-                    </div>
-
-                    <!-- Discord -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            💬 Discord *
-                        </label>
-                        <input
-                            type="text"
-                            id="discord"
-                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 transition-all"
-                            placeholder="Ex: @username"
-                        />
-                    </div>
-
-                    <!-- Type de demande -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-3">
-                            📋 Type de demande *
-                        </label>
-                        <div class="grid grid-cols-2 gap-4">
-                            <!-- Build -->
-                            <button
-                                type="button"
-                                onclick="selectType('build')"
-                                id="btn-build"
-                                class="relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200"
-                            >
-                                <div class="text-center">
-                                    <div class="text-4xl mb-2">🏗️</div>
-                                    <div class="font-bold text-lg text-gray-800">Build</div>
-                                    <div class="text-xs text-gray-600 mt-1">Construction</div>
-                                </div>
-                                <div id="check-build" class="hidden absolute top-2 right-2">
-                                    <svg class="w-6 h-6 text-blue-500" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                            </button>
-
-                            <!-- Farming -->
-                            <button
-                                type="button"
-                                onclick="selectType('farming')"
-                                id="btn-farming"
-                                class="relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-green-300 hover:bg-green-50/50 transition-all duration-200"
-                            >
-                                <div class="text-center">
-                                    <div class="text-4xl mb-2">🌾</div>
-                                    <div class="font-bold text-lg text-gray-800">Farming</div>
-                                    <div class="text-xs text-gray-600 mt-1">Agriculture</div>
-                                </div>
-                                <div id="check-farming" class="hidden absolute top-2 right-2">
-                                    <svg class="w-6 h-6 text-green-500" fill="currentColor" viewBox="0 0 20 20">
-                                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                    </svg>
-                                </div>
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Description -->
-                    <div>
-                        <label class="block text-sm font-semibold text-gray-700 mb-2">
-                            📝 Description de la demande *
-                        </label>
-                        <textarea
-                            id="description"
-                            rows="6"
-                            class="w-full px-4 py-3 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-purple-500 resize-none transition-all"
-                            placeholder="Decrivez votre demande en detail..."
-                        ></textarea>
-                    </div>
-
-                    <!-- Status Messages -->
-                    <div id="statusMessage" class="hidden"></div>
-
-                    <!-- Submit Button -->
-                    <button
-                        onclick="handleSubmit()"
-                        id="submitBtn"
-                        class="w-full bg-gradient-to-r from-purple-600 to-blue-600 text-white py-4 px-6 rounded-lg font-bold text-lg hover:from-purple-700 hover:to-blue-700 transition-all transform hover:scale-105 flex items-center justify-center gap-2 shadow-lg"
-                    >
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                        </svg>
-                        Envoyer la demande
-                    </button>
-                </div>
-            </div>
-
-            <!-- Info Box -->
-            <div class="mt-8 bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg p-6 text-white">
-                <h3 class="font-semibold text-lg mb-2">
-                    ℹ️ Informations importantes
-                </h3>
-                <ul class="space-y-1 text-sm text-blue-100">
-                    <li>• Tous les champs sont obligatoires</li>
-                    <li>• Choisissez entre Build ou Farming (pas les deux)</li>
-                    <li>• Notre equipe vous contactera sur Discord</li>
-                    <li>• Soyez precis dans votre description</li>
-                </ul>
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // METTEZ VOTRE URL DE WEBHOOK ICI
-        const WEBHOOK_URL = 'https://discordapp.com/api/webhooks/1462456499539279877/rcd9BtLQvFN1I6sSKTKuSYCVDCl-I64IY96IGfUr3rgm6G0hpTCPXGGMWXRkcpRaRJec';
-
-        let selectedType = '';
-
-        // Fonction pour ouvrir la galerie
-        function openBuildsGallery() {
-            const modal = document.getElementById('buildsModal');
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Fonction pour fermer la galerie
-        function closeBuildsGallery() {
-            const modal = document.getElementById('buildsModal');
-            modal.classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Fermer la galerie en cliquant en dehors
-        document.addEventListener('DOMContentLoaded', function() {
-            const modal = document.getElementById('buildsModal');
-            if (modal) {
-                modal.addEventListener('click', function(e) {
-                    if (e.target === modal) {
-                        closeBuildsGallery();
-                    }
-                });
-            }
-        });
-
-        // Fonction pour scroller jusqu'au formulaire
-        function scrollToForm() {
-            const formulaire = document.getElementById('formulaire');
-            formulaire.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-
-        function selectType(type) {
-            selectedType = type;
-
-            // Reset tous les boutons
-            document.getElementById('btn-build').className = 'relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-blue-300 hover:bg-blue-50/50 transition-all duration-200';
-            document.getElementById('btn-farming').className = 'relative p-6 rounded-xl border-2 border-gray-300 bg-white hover:border-green-300 hover:bg-green-50/50 transition-all duration-200';
-            document.getElementById('check-build').className = 'hidden absolute top-2 right-2';
-            document.getElementById('check-farming').className = 'hidden absolute top-2 right-2';
-
-            // Activer le bouton selectionne
-            if (type === 'build') {
-                document.getElementById('btn-build').className = 'relative p-6 rounded-xl border-2 border-blue-500 bg-blue-50 shadow-lg scale-105 transition-all duration-200';
-                document.getElementById('check-build').className = 'absolute top-2 right-2';
-            } else {
-                document.getElementById('btn-farming').className = 'relative p-6 rounded-xl border-2 border-green-500 bg-green-50 shadow-lg scale-105 transition-all duration-200';
-                document.getElementById('check-farming').className = 'absolute top-2 right-2';
-            }
-        }
-
-        function showStatus(type, message) {
-            const statusDiv = document.getElementById('statusMessage');
-            statusDiv.className = `flex items-center gap-2 p-4 rounded-lg ${
-                type === 'success' 
-                    ? 'bg-green-50 text-green-800 border-2 border-green-200' 
-                    : 'bg-red-50 text-red-800 border-2 border-red-200'
-            }`;
-
-            const icon = type === 'success' 
-                ? '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/></svg>'
-                : '<svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/></svg>';
-
-            statusDiv.innerHTML = icon + '<span class="font-medium">' + message + '</span>';
-            statusDiv.classList.remove('hidden');
-        }
-
-        async function handleSubmit() {
-            const pseudoMinecraft = document.getElementById('pseudoMinecraft').value.trim();
-            const discord = document.getElementById('discord').value.trim();
-            const description = document.getElementById('description').value.trim();
-
-            // Validation
-            if (!pseudoMinecraft || !discord || !description || !selectedType) {
-                showStatus('error', 'Veuillez remplir tous les champs et choisir un type de demande');
-                return;
-            }
-
-            // Desactiver le bouton
-            const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<div class="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin"></div> Envoi en cours...';
-
-            // Message Discord
-            const discordMessage = {
-                content: "🔔 **Nouvelle demande reçue !**",
-                embeds: [{
-                    title: selectedType === 'build' ? "🏗️ Nouvelle demande - BUILD" : "🌾 Nouvelle demande - FARMING",
-                    description: `**${pseudoMinecraft}** vient de soumettre une demande`,
-                    color: selectedType === 'build' ? 3447003 : 3066993,
-                    fields: [
-                        {
-                            name: "🎮 Pseudo Minecraft",
-                            value: `\`${pseudoMinecraft}\``,
-                            inline: true
-                        },
-                        {
-                            name: "💬 Discord",
-                            value: `\`${discord}\``,
-                            inline: true
-                        },
-                        {
-                            name: "📋 Type de demande",
-                            value: selectedType === 'build' ? "**Build**" : "**Farming**",
-                            inline: true
-                        },
-                        {
-                            name: "📝 Description de la demande",
-                            value: `>>> ${description}`,
-                            inline: false
-                        }
-                    ],
-                    timestamp: new Date().toISOString(),
-                    footer: {
-                        text: "BabaBuild - Formulaire de demande"
-                    }
-                }]
-            };
-
-            try {
-                const response = await fetch(WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(discordMessage)
-                });
-
-                if (response.ok) {
-                    showStatus('success', 'Demande envoyee avec succes ! Notre equipe va vous contacter bientot.');
-
-                    // Reset le formulaire
-                    document.getElementById('pseudoMinecraft').value = '';
-                    document.getElementById('discord').value = '';
-                    document.getElementById('description').value = '';
-                    selectType('');
-                    selectedType = '';
-                } else {
-                    throw new Error('Erreur');
-                }
-            } catch (error) {
-                showStatus('error', 'Erreur lors de l\'envoi. Veuillez reessayer plus tard.');
-            } finally {
-                // Reactiver le bouton
-                btn.disabled = false;
-                btn.innerHTML = '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/></svg> Envoyer la demande';
-            }
-        }
-    </script>
-</body>
-</html>
+    TOKEN = os.getenv('DISCORD_TOKEN')
+    if not TOKEN:
+        print("❌ ERREUR: Token Discord non trouvé! Définissez la variable DISCORD_TOKEN")
+    else:
+        bot.run(TOKEN)
